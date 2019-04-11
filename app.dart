@@ -1,74 +1,120 @@
-import 'dart:io';
+// 抽象类
+abstract class IQueue<T> {
+  T pop();
+  bool push(T item);
+}
 
-class Queue<T>{
-  List _a = new List<T>();
-  //可选参数
-  Queue([List<T> args]){
-    if(args != null){
-      args.forEach((T item){
-        _a.add(item);
-      });
-    }
+//继承
+class Queue<T> extends IQueue<T> {
+  List _queue = new List<T>();
+  T pop() {
+    T item = _queue[0];
+    _queue.removeAt(0);
   }
 
-  T pop(){
-    T item = _a[0];
-    _a.removeAt(0);
-    return item;
+  bool push(T item) {
+    _queue.add(item);
   }
 
-  Queue push(T item){
-    _a.add(item);
-    return this;
-  }
-
-  //定义一个getter
-  int get length{
-    return _a.length;
+  int get length {
+    return _queue.length;
   }
 }
 
+void main() {
+  Queue queue = new Queue<String>();
+  queue.push("String");
+  print(queue.length);
 
+  var d1 = new Date(1000);
+  var d2 = new Date(1000);
+  Date d3 = d1 + d2;
+  print(d3.date);
 
-class DateTime{
-  String _date;
-  String _time;
-  DateTime(this._date,this._time);
-  String toDateString(){
-    return this._date;
-  }
-  //可省略this
-  String toTimeString(){
-    return  _time;
-  }
-  String toDateTimeString(){
-    // 模板字符串
-    return '$_date $_time';
-  }
-  String getDescription(){
-    return '''
-            这是一个多行文本
-            这是一个多行文本
-          ''';
-  }
+  // dynamic 动态类型
+  dynamic n = "str";
+  n = 100;
+
+  fn2(name: "lingluo", age: 18);
+
+  MyMap map = new MyMap<String, int>();
+  map.setItem("name", 10);
+  print(map.length);
+
+  String moreRow = ''' 
+  我是多行字符串
+  我是多行字符串
+  ''';
 }
 
-final String str = "运行时常量";
-const String str2 = "编译时常量";
-//使用var类型推导
-var str3 = "123";
+//变量
+void strTest() {
+  String str = "str";
+  print(str);
+  final str2 = "final运行时常量";
+  const str3 = "const编译时常量";
+  int n = 123;
+  String str4 = n.toString();
+}
+
+//闭包
+Function fn = () {
+  int n = 0;
+  return () {
+    return ++n;
+  };
+};
 
 //闭包 立即执行
-Function number = (){
+Function number = () {
   int n = 0;
   return () {
     return ++n;
   };
 }();
 
-void main(){
-  print(new DateTime("2015-12-31", "18:30:55").toDateString());
-  print(number());
-  print(new Queue<String>().push('123').length);
+//运算符重载
+class Date {
+  int date;
+  Date(this.date);
+  Date operator +(Date other) {
+    return new Date(date + other.date);
+  }
+
+  Date operator -(Date other) {
+    return new Date(date + other.date);
+  }
 }
 
+//可选参数
+void fn1(int x, [String y]) {
+  final int a = x;
+  const b = "123";
+  // 模板字符串
+  const c = '$b';
+}
+
+void fn2({String name, int age}) {
+  print(name);
+  print(age);
+}
+
+class MyMap<K, V> {
+  List _keyList = new List<K>();
+  List _valueList = new List<V>();
+  V getItem(K key) {
+    int index = _keyList.indexOf(key);
+    return _valueList[index];
+  }
+
+  bool setItem(K key, V val) {
+    _keyList.add(key);
+    _valueList.add(val);
+    return true;
+  }
+
+  //定义一个getter
+  int get length {
+    return _keyList.length;
+  }
+}
